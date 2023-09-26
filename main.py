@@ -9,7 +9,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 class PdfLoader:
     def __init__(self):
-        # os.environ['OPENAI_API_KEY'] = getpass.getpass('OpenAI API Key:')
+        os.environ['OPENAI_API_KEY'] = getpass.getpass('OpenAI API Key:')
         self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k")
         self.data_prompt=ChatPromptTemplate.from_messages(messages=[
             ("system","你現在是一位專業的證券分析師,"
