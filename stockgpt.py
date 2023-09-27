@@ -7,7 +7,7 @@ import datetime as dt
 from bs4 import BeautifulSoup
 import pandas as pd
 class StockInfo():
-# 取得全部股票的股號、股名
+  # 取得全部股票的股號、股名
   def stock_name(self):
     print("線上讀取股號、股名、及產業別")
     response = requests.get('https://isin.twse.com.tw/isin/C_public.jsp?strMode=2')
@@ -117,55 +117,55 @@ class StockAnalysis():
             p+=paragraph.get_text()
         data.append([stock_name, formatted_date ,title,p])
     return data
-# 建立 GPT 3.5-16k 模型
-def get_reply(self, messages):
-  try:
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k",
-        messages=messages,
-        api_key=self.openai_api_key)
-    reply = response["choices"][0]["message"]["content"]
-  except openai.OpenAIError as err:
-    reply = f"發生 {err.error.type} 錯誤\n{err.error.message}"
-  return reply
+  # 建立 GPT 3.5-16k 模型
+  def get_reply(self, messages):
+    try:
+      response = openai.ChatCompletion.create(
+          model="gpt-3.5-turbo-16k",
+          messages=messages,
+          api_key=self.openai_api_key)
+      reply = response["choices"][0]["message"]["content"]
+    except openai.OpenAIError as err:
+      reply = f"發生 {err.error.type} 錯誤\n{err.error.message}"
+    return reply
 
-# 建立訊息指令(Prompt)
-def generate_content_msg(self, stock_id, name_df):
+  # 建立訊息指令(Prompt)
+  def generate_content_msg(self, stock_id, name_df):
+  
+      stock_name = self.stock_info.get_stock_name(
+          stock_id, name_df) if stock_id != "大盤" else stock_id
+  
+      price_data = self.stock_price(stock_id)
+      news_data = self.stock_news(stock_name)
+  
+      content_msg = f'你現在是一位專業的證券分析師, \
+        你會依據以下資料來進行分析並給出一份完整的分析報告:\n'
+  
+      content_msg += f'近期價格資訊:\n {price_data}\n'
+  
+      if stock_id != "大盤":
+          stock_value_data = self.stock_fundamental(stock_id)
+          content_msg += f'每季營收資訊：\n {stock_value_data}\n'
+  
+      content_msg += f'近期新聞資訊: \n {news_data}\n'
+      content_msg += f'請給我{stock_name}近期的趨勢報告,請以詳細、\
+        嚴謹及專業的角度撰寫此報告,並提及重要的數字, reply in 繁體中文'
+  
+      return content_msg
 
-    stock_name = self.stock_info.get_stock_name(
-        stock_id, name_df) if stock_id != "大盤" else stock_id
-
-    price_data = self.stock_price(stock_id)
-    news_data = self.stock_news(stock_name)
-
-    content_msg = f'你現在是一位專業的證券分析師, \
-      你會依據以下資料來進行分析並給出一份完整的分析報告:\n'
-
-    content_msg += f'近期價格資訊:\n {price_data}\n'
-
-    if stock_id != "大盤":
-        stock_value_data = self.stock_fundamental(stock_id)
-        content_msg += f'每季營收資訊：\n {stock_value_data}\n'
-
-    content_msg += f'近期新聞資訊: \n {news_data}\n'
-    content_msg += f'請給我{stock_name}近期的趨勢報告,請以詳細、\
-      嚴謹及專業的角度撰寫此報告,並提及重要的數字, reply in 繁體中文'
-
-    return content_msg
-
-# StockGPT
-def stock_gpt(self, stock_id):
-    content_msg = self.generate_content_msg(stock_id, self.name_df)
-
-    msg = [{
-        "role": "system",
-        "content": f"你現在是一位專業的證券分析師, 你會統整近期的股價\
-      、基本面、新聞資訊等方面並進行分析, 然後生成一份專業的趨勢分析報告"
-    }, {
-        "role": "user",
-        "content": content_msg
-    }]
-
-    reply_data = self.get_reply(msg)
-
-    return reply_data
+  # StockGPT
+  def stock_gpt(self, stock_id):
+      content_msg = self.generate_content_msg(stock_id, self.name_df)
+  
+      msg = [{
+          "role": "system",
+          "content": f"你現在是一位專業的證券分析師, 你會統整近期的股價\
+        、基本面、新聞資訊等方面並進行分析, 然後生成一份專業的趨勢分析報告"
+      }, {
+          "role": "user",
+          "content": content_msg
+      }]
+  
+      reply_data = self.get_reply(msg)
+  
+      return reply_data
