@@ -27,7 +27,7 @@ class PdfLoader:
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=size,
                                                 chunk_overlap=overlap)
         new_doc = text_splitter.split_documents(doc)
-        db = FAISS.from_documents(new_doc, OpenAIEmbeddings())
+        db = FAISS.from_documents(new_doc, OpenAIEmbeddings(),persist_directory='/content/drive/MyDrive/DB/db')
         return db
     def analyze_chain(self,db,input):
         data = db.max_marginal_relevance_search(input)
