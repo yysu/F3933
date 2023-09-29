@@ -28,6 +28,7 @@ class PdfLoader:
                                                 chunk_overlap=overlap)
         new_doc = text_splitter.split_documents(doc)
         db = FAISS.from_documents(new_doc, OpenAIEmbeddings())
+        db.save_local('/content/drive/MyDrive/DB/db')
         return db
     def analyze_chain(self,db,input):
         data = db.max_marginal_relevance_search(input)
