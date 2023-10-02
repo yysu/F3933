@@ -1,5 +1,3 @@
-import getpass
-import os
 from langchain.document_loaders import PDFPlumberLoader
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
@@ -8,9 +6,10 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 class PdfLoader:
-    def __init__(self):
-        os.environ['OPENAI_API_KEY'] = getpass.getpass('OpenAI API Key:')
-        self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k")
+    def __init__(self,openai_api_key):
+        # os.environ['OPENAI_API_KEY'] = getpass.getpass('OpenAI API Key:')
+        self.openai_api_key = openai_api_key
+        self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k",openai_api_key=self.openai_api_key)
         self.data_prompt=ChatPromptTemplate.from_messages(messages=[
             ("system","你現在是一位專業的證券分析師,"
             "你會統整年報並進行分析, 針對{output}作分析, 然後生成一份專業的趨勢分析報告。"),
@@ -27,7 +26,7 @@ class PdfLoader:
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=size,
                                                 chunk_overlap=overlap)
         new_doc = text_splitter.split_documents(doc)
-        db = FAISS.(doc, OpenAIEmbeddings(max_retries=1))
+        db = FAISS.(doc, OpenAIEmbeddings(max_retries=1,openai_api_key=self.openai_api_key))
         db.save_local('/content/drive/MyDrive/DB/db')
         return db
     def analyze_chain(self,db,input):
