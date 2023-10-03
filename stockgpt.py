@@ -30,8 +30,9 @@ class StockInfo():
       return name_df.set_index('股號').loc[stock_id, '股名']
 
 class StockAnalysis():
-  def __init__(self):
+  def __init__(self,openai_api_key):
     # 初始化 OpenAI API 金鑰
+    self.openai_api_key = openai_api_key
     # self.openai_api_key = getpass.getpass("請輸入金鑰：")  # 請在使用時設定 API 金鑰
     self.stock_info = StockInfo()  # 實例化 StockInfo 類別
     self.name_df = self.stock_info.stock_name()
@@ -122,7 +123,8 @@ class StockAnalysis():
     try:
       response = openai.ChatCompletion.create(
           model="gpt-3.5-turbo-16k",
-          messages=messages)
+          messages=messages,
+          openai_api_key = self.openai_api_key)
       reply = response["choices"][0]["message"]["content"]
     except openai.OpenAIError as err:
       reply = f"發生 {err.error.type} 錯誤\n{err.error.message}"
