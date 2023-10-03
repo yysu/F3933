@@ -26,7 +26,7 @@ class PdfLoader:
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=size,
                                                 chunk_overlap=overlap)
         new_doc = text_splitter.split_documents(doc)
-        db = FAISS.from_documents(doc, OpenAIEmbeddings(max_retries=1,openai_api_key=self.openai_api_key))
+        db = FAISS.from_documents(doc, OpenAIEmbeddings(openai_api_key=self.openai_api_key))
         db.save_local('/content/drive/MyDrive/DB/file')
         return db
     def analyze_chain(self,db,input):
