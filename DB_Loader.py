@@ -1,3 +1,4 @@
+import os
 from langchain.document_loaders import PDFPlumberLoader
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
