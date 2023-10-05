@@ -54,9 +54,9 @@ class StockAnalysis():
   
     data = {
       '日期': df.index.strftime('%Y-%m-%d').tolist(),
-      # '收盤價': df['收盤價'].tolist(),
+      '收盤價': df['收盤價'].tolist(),
       '每日報酬': df['收盤價'].pct_change().tolist(),
-      # '漲跌價差': df['調整後收盤價'].diff().tolist()
+      '漲跌價差': df['調整後收盤價'].diff().tolist()
       }
   
     return data
@@ -95,7 +95,7 @@ class StockAnalysis():
   
     data=[]
     # 取得 Json 格式資料
-    json_data = requests.get(f'https://ess.api.cnyes.com/ess/api/v1/news/keyword?q={stock_name}&limit=5&page=1').json()
+    json_data = requests.get(f'https://ess.api.cnyes.com/ess/api/v1/news/keyword?q={stock_name}&limit=4&page=1').json()
   
     # 依照格式擷取資料
     items=json_data['data']['items']
