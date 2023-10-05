@@ -1,6 +1,8 @@
 import os
 import time
 import random
+import requests
+from bs4 import BeautifulSoup
 from langchain.document_loaders import PDFPlumberLoader
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
