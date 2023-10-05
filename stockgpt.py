@@ -54,7 +54,7 @@ class StockAnalysis():
   
     data = {
       '日期': df.index.strftime('%Y-%m-%d').tolist(),
-      '收盤價': df['收盤價'].tolist(),
+      # '收盤價': df['收盤價'].tolist(),
       '每日報酬': df['收盤價'].pct_change().tolist(),
       '漲跌價差': df['調整後收盤價'].diff().tolist()
       }
