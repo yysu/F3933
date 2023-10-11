@@ -397,7 +397,6 @@ class StockDB:
   # 可用 table_list 指定要check哪些table, 以序號(0~4)指定, 例如 [1,3,4]
   def table_check(self, table_list=None):
     table = ('公司','日頻','季頻')
-    not_check = (None, ['報酬'], ['日報酬','技術指標1','技術指標2'], None, None)
     table_msg = ('公司(記錄數, 股號數)',
            '日頻(記錄數, 股號數, 由, 到)',
            '季頻(記錄數, 股號數, 由, 到)')
@@ -423,17 +422,5 @@ class StockDB:
       result = cursor.fetchone()
       print(f"○{table_msg[i]}")
       print(result)
-
-      df = self.get(table[i], psdate=0) # 不解析日期欄
-      if not_check[i] is not None:
-        df = df.drop(columns=not_check[i]) # 使用 drop() 方法删除指定的列
-      df_null = df[df.isnull().any(axis=1)] # 取出包含空值的橫列
-      if not_check[i] is None:
-        print(f'有 {df_null.shape[0]} 筆包含空值的列')
-      else:
-        print(f'有 {df_null.shape[0]} 筆包含空值的列(未檢查{not_check[i]}欄)')
-      if df_null.shape[0]:
-        print(df_null)
-      print
 
     print("=" * 40)
