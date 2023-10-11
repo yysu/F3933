@@ -350,7 +350,9 @@ class StockDB:
     date_list.pop()
     # 證交所資料更新
     print("更新日本益比、融資融卷、三大法人資料")
-
+    if len(date_list) == 0:
+      print('不用更新!')
+      return
     advance_df = pd.DataFrame()
     for date in date_list:
       print("完成更新:", date)
