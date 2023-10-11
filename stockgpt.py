@@ -56,7 +56,7 @@ class StockAnalysis():
       '日期': df.index.strftime('%Y-%m-%d').tolist(),
       '收盤價': df['收盤價'].tolist(),
       '每日報酬': df['收盤價'].pct_change().tolist(),
-      '漲跌價差': df['調整後收盤價'].diff().tolist()
+      # '漲跌價差': df['調整後收盤價'].diff().tolist()
       }
   
     return data
@@ -157,7 +157,7 @@ class StockAnalysis():
   # StockGPT
   def stock_gpt(self, stock_id):
       content_msg = self.generate_content_msg(stock_id, self.name_df)
-  
+      print(content)
       msg = [{
           "role": "system",
           "content": f"你現在是一位專業的證券分析師, 你會統整近期的股價漲幅\
