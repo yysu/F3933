@@ -178,7 +178,7 @@ class StockDB:
 
   def quarter_to_int(year, quarter):
     quarter_dict = {"Q1": 1, "Q2": 2, "Q3": 3, "Q4": 4}
-    return year * 10 + quarter_dict[quarter]
+    return int(year) * 10 + quarter_dict[quarter]
 
   # 更新季頻的基本資訊
   def renew_quarterly_frequency_basic(self):
