@@ -176,9 +176,25 @@ class StockDB:
       self.conn.commit()
       print(id)
 
+  def quarter_to_int(year, quarter):
+    quarter_dict = {"Q1": 1, "Q2": 2, "Q3": 3, "Q4": 4}
+    return year * 10 + quarter_dict[quarter]
 
   # 更新季頻的基本資訊
   def renew_quarterly_frequency_basic(self):
+    #找出最後更新日期
+    cursor = self.conn.execute('SELECT 年份, 季度 FROM 季頻 ORDER BY 年份 DESC, 季度 DESC LIMIT 1')
+    m_date = cursor.fetchone()
+    latest_year, latest_quarter = m_date
+    print('季頻基本資料的最後更新日：', m_date)  #for debug
+    if not m_date:
+      start_date = self.db_start_date  #抓全部
+    else:
+      input_date = datetime.strptime(m_date, '%Y-%m-%d') # 將字串轉換為日期型別
+      next_day = input_date + timedelta(days=1) # 將日期加一天
+      if next_day > datetime.today(): #如果不用更新
+        print("不用更新！")
+        return
     #更新季頻資料表
     print('更新季頻')
     df_data=[]
