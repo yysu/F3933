@@ -157,7 +157,6 @@ class StockAnalysis():
   # StockGPT
   def stock_gpt(self, stock_id):
       content_msg = self.generate_content_msg(stock_id, self.name_df)
-      print(content_msg)
       msg = [{
           "role": "system",
           "content": f"你現在是一位專業的證券分析師, 你會統整近期的股價漲幅"\
