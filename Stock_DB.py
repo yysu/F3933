@@ -176,7 +176,7 @@ class StockDB:
       self.conn.commit()
       print(id)
 
-  def quarter_to_int(year, quarter):
+  def quarter_to_int(self, year, quarter):
     quarter_dict = {"Q1": 1, "Q2": 2, "Q3": 3, "Q4": 4}
     return int(year) * 10 + quarter_dict[quarter]
 
