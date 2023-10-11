@@ -65,7 +65,10 @@ class PdfLoader:
         response3 = requests.get('https://doc.twse.com.tw' + link1)
         time.sleep(wait_time)
         # 取得 PDF 資料
-        with open('/content/drive/MyDrive/PDF/'+ y + '_' + id + '.pdf', 'wb') as file:
+        folder_path = '/content/drive/MyDrive/PDF/'
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        with open(folder_path + y + '_' + id + '.pdf', 'wb') as file:
             file.write(response3.content)
         print('OK')
     def pdf_loader(self,file,size,overlap):
