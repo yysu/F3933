@@ -79,7 +79,10 @@ class PdfLoader:
         new_doc = text_splitter.split_documents(doc)
         db = FAISS.from_documents(new_doc, OpenAIEmbeddings())
         file_name = file.split("/")[-1].split(".")[0]
-        db.save_local(f'/content/drive/MyDrive/DB/{file_name}')
+        db_file = '/content/drive/MyDrive/DB/'
+        if not os.path.exists(db_file):
+            os.makedirs(db_file)
+        db.save_local(db_file + file_name)
         return db
     def analyze_chain(self,db,input):
         data = db.max_marginal_relevance_search(input)
