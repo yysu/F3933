@@ -65,7 +65,7 @@ class PdfLoader:
         response3 = requests.get('https://doc.twse.com.tw' + link1)
         time.sleep(wait_time)
         # 取得 PDF 資料
-        folder_path = '/content/drive/MyDrive/PDF/'
+        folder_path = '/content/drive/MyDrive/flagtec/PDF/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         with open(folder_path + y + '_' + id + '.pdf', 'wb') as file:
@@ -79,7 +79,7 @@ class PdfLoader:
         new_doc = text_splitter.split_documents(doc)
         db = FAISS.from_documents(new_doc, OpenAIEmbeddings())
         file_name = file.split("/")[-1].split(".")[0]
-        db_file = '/content/drive/MyDrive/DB/'
+        db_file = '/content/drive/MyDrive/flagtec/DB/'
         if not os.path.exists(db_file):
             os.makedirs(db_file)
         db.save_local(db_file + file_name)
