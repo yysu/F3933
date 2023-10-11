@@ -139,8 +139,8 @@ class StockAnalysis():
       price_data = self.stock_price(stock_id)
       news_data = self.stock_news(stock_name)
   
-      content_msg = f'你現在是一位專業的證券分析師, \
-        你會依據以下資料來進行分析並給出一份完整的分析報告:\n'
+      content_msg = f'你現在是一位專業的證券分析師, '\
+        '你會依據以下資料來進行分析並給出一份完整的分析報告:\n'
   
       content_msg += f'近期價格資訊:\n {price_data}\n'
   
@@ -149,8 +149,8 @@ class StockAnalysis():
           content_msg += f'每季營收資訊：\n {stock_value_data}\n'
   
       content_msg += f'近期新聞資訊: \n {news_data}\n'
-      content_msg += f'請給我{stock_name}近期的趨勢報告,請以詳細、\
-        嚴謹及專業的角度撰寫此報告,並提及重要的數字, reply in 繁體中文'
+      content_msg += f'請給我{stock_name}近期的趨勢報告,請以詳細、'\
+        '嚴謹及專業的角度撰寫此報告,並提及重要的數字, reply in 繁體中文'
   
       return content_msg
 
@@ -160,8 +160,8 @@ class StockAnalysis():
       print(content_msg)
       msg = [{
           "role": "system",
-          "content": f"你現在是一位專業的證券分析師, 你會統整近期的股價漲幅\
-        、基本面、新聞資訊等方面並進行分析, 然後生成一份專業的趨勢分析報告"
+          "content": f"你現在是一位專業的證券分析師, 你會統整近期的股價漲幅"\
+        "、基本面、新聞資訊等方面並進行分析, 然後生成一份專業的趨勢分析報告"
       }, {
           "role": "user",
           "content": content_msg
