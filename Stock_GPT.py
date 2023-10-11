@@ -129,7 +129,41 @@ class StockAnalysis():
     except openai.OpenAIError as err:
       reply = f"發生 {err.error.type} 錯誤\n{err.error.message}"
     return reply
+  
+  # 設定 AI 角色, 使其依據使用者需求進行 df 處理
+  def ai_helper(df, user_msg):
 
+    msg = [{
+      "role":
+      "system",
+      "content":
+      f"As a professional code generation robot, \
+        I require your assistance in generating Python code \
+        based on specific user requirements. To proceed, \
+        I will provide you with a dataframe (df) that follows the \
+        format {df.columns}. Your task is to carefully analyze the \
+        user's requirements and generate the Python code \
+        accordingly.Please note that your response should solely \
+        consist of the code itself, \
+        and no additional information should be included."
+    }, {
+      "role":
+      "user",
+      "content":
+      f"The user requirement:{user_msg} \n\
+         Your task is to develop a Python function named \
+        'calculate(df)'. This function should accept a dataframe as \
+        its parameter. Ensure that you only utilize the columns \
+        present in the dataset, specifically {df.columns}. \
+        After processing, the function should return the processed \
+        dataframe. Your response should strictly contain the Python \
+        code for the 'calculate(df)' function \
+        and exclude any unrelated content."
+    }]
+  
+    reply_data = self.get_reply(msg)
+    return reply_data
+  
   # 建立訊息指令(Prompt)
   def generate_content_msg(self, stock_id, name_df):
   
