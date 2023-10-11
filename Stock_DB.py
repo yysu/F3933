@@ -416,7 +416,7 @@ class StockDB:
         FROM 季頻'''))
     print("●檢查所有資料表的資料筆數、日期範圍、及空值狀況")
     if table_list is None:
-      table_list = range(5)
+      table_list = range(3)
     for i in table_list:
       # 顯示資料筆數及日期範圍
       print("=" * 40)
