@@ -137,28 +137,21 @@ class StockAnalysis():
       "role":
       "system",
       "content":
-      f"As a professional code generation robot, \
-        I require your assistance in generating Python code \
-        based on specific user requirements. To proceed, \
-        I will provide you with a dataframe (df) that follows the \
-        format {df.columns}. Your task is to carefully analyze the \
-        user's requirements and generate the Python code \
-        accordingly.Please note that your response should solely \
-        consist of the code itself, \
-        and no additional information should be included."
+      "As an AI assistant for SQL code generation, "\
+      "I need your assistance in creating SQL queries based on specific user requirements. "\
+      f"To begin, I'll provide you with the name of some database table, {table_name}, "\
+      "where the data is stored. Your task is to carefully analyze the user's SQL query request and generate the SQL code accordingly. "\
+      "Please ensure that your response contains only the SQL code and excludes any extraneous information. "\
+      "Avoid using '\n' in your SQL code."
     }, {
       "role":
       "user",
       "content":
-      f"The user requirement:{user_msg} \n\
-         Your task is to develop a Python function named \
-        'calculate(df)'. This function should accept a dataframe as \
-        its parameter. Ensure that you only utilize the columns \
-        present in the dataset, specifically {df.columns}. \
-        After processing, the function should return the processed \
-        dataframe. Your response should strictly contain the Python \
-        code for the 'calculate(df)' function \
-        and exclude any unrelated content."
+      f"User Request: {user_msg}"\
+      f"Your task is to create a SQL query that operates on the {table_name} table. "\
+      "Please provide the SQL code that fulfills the user's request. "\
+      "Ensure that your SQL code adheres to the structure of the database table and effectively retrieves or manipulates the required data."\
+      "Ensure that your SQL code does not include '\n'."
     }]
   
     reply_data = self.get_reply(msg)
