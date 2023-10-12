@@ -37,7 +37,7 @@ class StockAnalysis():
     self.stock_info = StockInfo()  # 實例化 StockInfo 類別
     self.name_df = self.stock_info.stock_name()
   # 從 yfinance 取得一周股價資料
-  def stock_price(self, stock_id="大盤", days = 10):
+  def stock_price(self, stock_id="大盤", days = 30):
     if stock_id == "大盤":
       stock_id="^TWII"
     else:
@@ -95,7 +95,7 @@ class StockAnalysis():
   
     data=[]
     # 取得 Json 格式資料
-    json_data = requests.get(f'https://ess.api.cnyes.com/ess/api/v1/news/keyword?q={stock_name}&limit=4&page=1').json()
+    json_data = requests.get(f'https://ess.api.cnyes.com/ess/api/v1/news/keyword?q={stock_name}&limit=10&page=1').json()
   
     # 依照格式擷取資料
     items=json_data['data']['items']
