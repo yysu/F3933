@@ -367,6 +367,7 @@ class StockDB:
 
   # 顯示所有資料表的結構及索引資訊
   def table_info(self):
+    t_list = []
     # 取得所有資料表的名稱
     cursor = self.conn.execute("SELECT name FROM sqlite_master WHERE type='table';")
     table_names = cursor.fetchall()
@@ -375,15 +376,18 @@ class StockDB:
     print("=" * 40)
     for table in table_names:
       table_name = table[0]
-      print(f"資料表：{table_name}")
-
+      table_info = f"資料表：{table_name}"
+      print(f"資料表：{table_name}\n")
+      
       # 取得資料表的欄位資訊
       cursor.execute(f"PRAGMA table_info({table_name});")
       columns = cursor.fetchall()
       for column in columns:
         if column[5] == 0:
+          table_info += f"欄位：{column[1]}, {column[2]}\n"
           print(f"欄位：{column[1]}, {column[2]}")
         else:
+          table_info += f"欄位：{column[1]}, {column[2]}, 主键：{column[5]}\n"
           print(f"欄位：{column[1]}, {column[2]}, 主键：{column[5]}")
 
       # 取得資料表的索引資訊
@@ -392,8 +396,11 @@ class StockDB:
       for index in indexes:
           index_name = index[1]
           is_unique = "唯一" if index[2] else "非唯一"
+          table_info += f"索引：{index_name}, 類型：{is_unique}\n"
           print(f"索引：{index_name}, 類型：{is_unique}")
+      t_list.append(table_info)
       print("=" * 40)
+    return t_list
 
   # 檢查所有資料表的資料範圍及空值狀況
   # 可用 table_list 指定要check哪些table, 以序號(0~4)指定, 例如 [1,3,4]
