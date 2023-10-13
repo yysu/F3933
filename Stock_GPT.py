@@ -131,7 +131,7 @@ class StockAnalysis():
     return reply
   
   # 設定 AI 角色, 使其依據使用者需求進行 df 處理
-  def ai_helper(table_name, user_msg):
+  def ai_helper(self, table_name, user_msg):
 
     msg = [{
       "role":
