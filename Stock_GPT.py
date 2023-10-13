@@ -131,29 +131,30 @@ class StockAnalysis():
     return reply
   
   # 設定 AI 角色, 使其依據使用者需求進行 df 處理
-  def ai_helper(self, table_name, user_msg):
+  def ai_helper(table_name, user_msg):
 
     msg = [{
       "role":
       "system",
       "content":
-      "As an AI assistant for SQL code generation, "\
-      "I need your assistance in creating SQL queries based on specific user requirements. "\
-      f"To begin, I'll provide you with the name of some database table, {table_name}, "\
-      "where the data is stored. Your task is to carefully analyze the user's SQL query request and generate the SQL code accordingly. "\
-      "Please ensure that your response contains only the SQL code and excludes any extraneous information. "\
-      "Avoid using '\n' in your SQL code."
+       "As an AI assistant specializing in SQL code generation, "\
+       "I require your help in crafting SQL queries to meet specific user needs. "\
+       "To get started, the provided list comprises tables along with their corresponding column names,\n"
+       f"{table_name}\n"
+       "Your role involves a meticulous analysis of the user's SQL query request and the subsequent generation of SQL code that aligns with it. "\
+       "Kindly ensure that your response exclusively includes the SQL code and omits any superfluous details.  "\
+       "Additionally, refrain from using '\n' within the SQL code."
     }, {
       "role":
       "user",
       "content":
-      f"User Request: {user_msg}"\
-      f"Your task is to create a SQL query that operates on the {table_name} table. "\
-      "Please provide the SQL code that fulfills the user's request. "\
-      "Ensure that your SQL code adheres to the structure of the database table and effectively retrieves or manipulates the required data."\
-      "Ensure that your SQL code does not include '\n'."
+      f"Based on the user's request: {user_msg},"\
+       "your assignment is to formulate a SQL query that interacts with the specified table.  "\
+       "You must identify the corresponding table from the user's request. "\
+       "Please supply the SQL code that satisfies the user's request. Ensure that your SQL code conforms to the table's structure and efficiently extracts or modifies the necessary data. "\
+       "Make certain that your SQL code does not contain '\n' characters."
     }]
-  
+    
     reply_data = self.get_reply(msg)
     return reply_data
   
