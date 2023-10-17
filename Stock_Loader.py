@@ -1,6 +1,8 @@
 import os
 import time
 import random
+import zipfile
+import io
 import requests
 from bs4 import BeautifulSoup
 from langchain.document_loaders import PDFPlumberLoader
