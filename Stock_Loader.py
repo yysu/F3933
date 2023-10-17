@@ -28,6 +28,7 @@ class PdfLoader:
     def annual_report(self,id,y):
         wait_time = random.uniform(2,6)
         url = 'https://doc.twse.com.tw/server-java/t57sb01'
+        folder_path = '/content/drive/MyDrive/StockGPT/PDF/'
         # 建立 POST 請求的表單
         data = {
             "id":"",
@@ -55,22 +56,39 @@ class PdfLoader:
             'filename':link1 # 檔案名稱
         }
         # 發送 POST 請求
-        with requests.post(url, data=data2) as response2:
+        file_extension = link1.split('.')[-1]
+        if  file_extension =='zip':
+            with requests.post(url, data=data2) as response2:
+                if response2.status_code == 200:
+                    zip_data = io.BytesIO(response2.content)
+                    with zipfile.ZipFile(zip_data) as myzip:
+                        # 瀏覽 ZIP 檔案中的所有檔案和資料夾
+                        for file_info in myzip.namelist():
+                            if file_info.endswith('.pdf'):
+                                # 讀取 PDF 檔案
+                                with myzip.open(file_info) as myfile:
+                                    # 你可以選擇如何處理 PDF 檔案，例如儲存它
+                                    with open(folder_path + y + '_' + id +'.pdf', 'wb') as f:
+                                        f.write(myfile.read())
+                                    print('ok')
+        else:
+            # 發送 POST 請求
+            with requests.post(url, data=data2) as response2:
+                time.sleep(wait_time)
+                link=BeautifulSoup(response2.text, 'html.parser')
+                link1=link.find('a')['href']
+                print(link1)
+        
+            # 發送 GET 請求
+            response3 = requests.get('https://doc.twse.com.tw' + link1)
             time.sleep(wait_time)
-            link=BeautifulSoup(response2.text, 'html.parser')
-            link1=link.find('a')['href']
-            print(link1)
-    
-        # # 發送 GET 請求
-        response3 = requests.get('https://doc.twse.com.tw' + link1)
-        time.sleep(wait_time)
-        # 取得 PDF 資料
-        folder_path = '/content/drive/MyDrive/StockGPT/PDF/'
-        if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
-        with open(folder_path + y + '_' + id + '.pdf', 'wb') as file:
-            file.write(response3.content)
-        print('OK')
+            # 取得 PDF 資料
+            
+            if not os.path.exists(folder_path):
+                os.makedirs(folder_path)
+            with open(folder_path + y + '_' + id + '.pdf', 'wb') as file:
+                file.write(response3.content)
+            print('OK')
     def pdf_loader(self,file,size,overlap):
         loader = PDFPlumberLoader(file)
         doc = loader.load()
