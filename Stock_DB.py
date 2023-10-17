@@ -250,6 +250,7 @@ class StockDB:
     data = []
     for row in data_rows:
         row_data = list(row.stripped_strings)
+        row_data[1:] = [item.replace(',', '') for item in row_data[1:]]
         data.append(row_data)
 
     # 建立 DataFrame
