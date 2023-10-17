@@ -190,10 +190,10 @@ class StockDB:
     
     #更新季頻資料表
     print('更新季頻')
-    df_data=[]
+    
     df = self.stock_name()
     for id, name in zip(df['股號'],df['股名']):
-        
+        df_data=[]
         url = [f'https://tw.stock.yahoo.com/quote/{id}.TW/income-statement',
                 f'https://tw.stock.yahoo.com/quote/{id}.TW/eps']
         df = self.url_find(url[0])
@@ -202,7 +202,7 @@ class StockDB:
         latest_data_time = self.quarter_to_int(latest_year, latest_quarter)
         if data_time > latest_data_time:
           print(id)
-          df.transpose()
+          df = df.transpose()
           df.columns = df.iloc[0]
           df = df[1:]
           df.insert(0,'年度/季別',df.index)
@@ -368,7 +368,7 @@ class StockDB:
 
   # 顯示所有資料表的結構及索引資訊
   def table_info(self):
-    t_list = []
+    t_list = {}
     # 取得所有資料表的名稱
     cursor = self.conn.execute("SELECT name FROM sqlite_master WHERE type='table';")
     table_names = cursor.fetchall()
@@ -377,18 +377,18 @@ class StockDB:
     print("=" * 40)
     for table in table_names:
       table_name = table[0]
-      table_info = f"資料表：{table_name}"
       print(f"資料表：{table_name}\n")
       
       # 取得資料表的欄位資訊
       cursor.execute(f"PRAGMA table_info({table_name});")
       columns = cursor.fetchall()
+      column_names = [] # 用來儲存當前表的所有欄位名
       for column in columns:
         if column[5] == 0:
-          table_info += f"欄位：{column[1]}, {column[2]}\n"
+          column_names.append(column[1])
           print(f"欄位：{column[1]}, {column[2]}")
         else:
-          table_info += f"欄位：{column[1]}, {column[2]}, 主键：{column[5]}\n"
+          column_names.append(column[1])
           print(f"欄位：{column[1]}, {column[2]}, 主键：{column[5]}")
 
       # 取得資料表的索引資訊
@@ -397,9 +397,8 @@ class StockDB:
       for index in indexes:
           index_name = index[1]
           is_unique = "唯一" if index[2] else "非唯一"
-          table_info += f"索引：{index_name}, 類型：{is_unique}\n"
           print(f"索引：{index_name}, 類型：{is_unique}")
-      t_list.append(table_info)
+      t_list[table_name] = column_names
       print("=" * 40)
     return t_list
 
