@@ -126,8 +126,7 @@ class StockAnalysis():
       response = openai.ChatCompletion.create(
           model="gpt-3.5-turbo-16k",
           temperature=0,
-          messages=messages,
-          max_tokens = 12000
+          messages=messages
       )
       reply = response["choices"][0]["message"]["content"]
     except openai.OpenAIError as err:
