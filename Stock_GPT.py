@@ -1,5 +1,6 @@
 import getpass
 import openai
+import tiktoken
 import yfinance as yf
 import numpy as np
 import requests
@@ -118,13 +119,16 @@ class StockAnalysis():
             p+=paragraph.get_text()
         data.append([stock_name, formatted_date ,title,p])
     return data
+    
   # 建立 GPT 3.5-16k 模型
   def get_reply(self, messages):
     try:
       response = openai.ChatCompletion.create(
           model="gpt-3.5-turbo-16k",
           temperature=0,
-          messages=messages)
+          messages=messages,
+          max_tokens = 12000
+      )
       reply = response["choices"][0]["message"]["content"]
     except openai.OpenAIError as err:
       reply = f"發生 {err.error.type} 錯誤\n{err.error.message}"
