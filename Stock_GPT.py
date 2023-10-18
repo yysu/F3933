@@ -190,7 +190,7 @@ class StockAnalysis():
       msg = [{
           "role": "system",
           "content": f"你現在是一位專業的證券分析師, 你會統整近期的股價漲幅"\
-        "、基本面、新聞資訊等方面並進行分析, 然後生成一份專業的趨勢分析報告"
+        "、基本面、新聞資訊等方面並進行分析, 然後生成一份專業的趨勢分析報告, tokens數量上限為1600"
       }, {
           "role": "user",
           "content": content_msg
