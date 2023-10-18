@@ -136,10 +136,10 @@ class StockAnalysis():
     {
       "role": "system",
       "content":
-      f"我需要一個名為 'calculate(df)' 的 Python 函式來解答問題{user_msg}, 請注意問題中的時間線和關鍵字,"\
-      "時間以現在時間為主 pd.to_datetime('now'),不是資料時間。"\
-      f"我會提供三個 SQL 表格 {table_name}, 其中日頻和季頻表格為包含多檔股票在不同時間上的數據, 請先依照問題找出相對應的表格並記住。"\
-      "季頻的'年份'和日頻的'日期'都是字串格式。請先根據問題判斷使用哪種表格, 如果是'公司'不必轉換格式；如果是'季頻'，請將'年份'欄位轉換為時間格式；如果是'日頻'，請將'日期'欄位轉換為時間格式。"\
+      f"我需要一個名為 'calculate(df)' 的 Python 函式來解答問題{user_msg}, 請注意問題中的時間線和關鍵字, 不需要 Example usage。"\
+      "如有時間請以現在時間為主 pd.to_datetime('now'),不是資料時間。"\
+      f"我會提供表格的欄位 {table_name},請使用我給的欄位, 不要自己生成表格欄位。"\
+      "給的欄位中如有與時間相關的欄位需轉換成時間格式,季度不算。"\
       "如果需要計算報酬率時才使用 DataFrame 的 'groupby'和'pct_change' 函數。"\
       "函式必須返回一個 DataFrame。請只使用 pandas 進行計算且要符合問題的要點。"\
       "Please note that your response should solely consist of the code itself, and no additional information should be included. "
@@ -148,7 +148,8 @@ class StockAnalysis():
       "role":
       "user",
       "content":
-      "請確保生成的程式碼僅為 'calculate' 函式，不包括其他無關的內容或輸出。"
+      "請確保生成的程式碼僅為 'calculate' 函式，不包括其他無關的內容或輸出。"\
+      "Please note that your response should solely consist of the code itself, and no additional information should be included. "
     }]
     
     
