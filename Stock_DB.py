@@ -126,7 +126,7 @@ class StockDB:
 
   # 上市股票
   def stock_name(self):
-    print(self.ids)
+    # print(self.ids)
     if self.ids is not None:
       return self.ids
     print("線上讀取股號、股名、及產業別")
@@ -174,7 +174,7 @@ class StockDB:
       self.conn.execute("INSERT INTO 公司 values(?,?,?,?,?)",
                 (id,name,industry,stock_sharesOutstanding,stock_marketCap))
       self.conn.commit()
-      print(id)
+      # print(id)
 
   def quarter_to_int(self, year, quarter):
     quarter_dict = {"Q1": 1, "Q2": 2, "Q3": 3, "Q4": 4}
