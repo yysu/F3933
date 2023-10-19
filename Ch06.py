@@ -140,9 +140,9 @@ class StockAnalysis():
       "role": "system",
       "content":
       f"我只需要一個名為 'calculate(df)' 的 Python 函式來解答問題{user_msg}, 請注意問題中的時間線和關鍵字,"\
-      "如有時間請以現在時間為主,不是資料時間。"\
+      "如有時間請以現在時間 (now) 為主,不是資料時間。"\
       f"我會提供表格的欄位 {table_name},請使用我給的欄位, 不要自己生成表格欄位。"\
-      # f"{table_name}中如有與時間相關的欄位需轉換成時間格式,'季度'不算。"\
+      f"{table_name}中如有與 time 相關的欄位才需轉換成時間格式,'季度'不算。"\
       "如果需要計算報酬率,表格資料結構為多檔股票不同時間的數據 可以使用 DataFrame 的 'groupby'和'pct_change' 函數。"\
       "不需要完整資料, 只要跟問題有關的資料即可。"\
       "最後函式返回的資料必須是 DataFrame 格式。即使前面的步驟產生了 Series 格式的資料，也請確保在函式最後將其轉換為 DataFrame。請只使用 pandas 進行計算。"\
