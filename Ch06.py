@@ -143,7 +143,7 @@ class StockAnalysis():
       "如有時間請以現在時間 (now) 為主,不是資料時間。"\
       f"我會提供表格的欄位 {table_name},請使用我給的欄位作為 DataFrame 的欄位,請勿自己生成欄位, 我給的欄位都有資料。"
       "表格資料結構為多檔股票不同時間的數據, 如果需要可以使用 DataFrame 的 'groupby'和'pct_change' 函數。"\
-      "必須過濾 NaN ,不需要完整資料, 只要跟問題有關的資料即可。"\
+      "必須過濾 NaN。不需要完整資料, 只要跟問題有關的資料即可。"\
       "最後函式返回一個 df 且必須是 DataFrame 格式, 請確保在函式最後將其轉換為 DataFrame。請只使用 pandas 進行計算。"\
       "Please note that your response should solely consist of the code itself, and no additional information should be included. "
     }, 
