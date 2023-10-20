@@ -10,7 +10,7 @@ import pandas as pd
 class StockInfo():
   # 取得全部股票的股號、股名
   def stock_name(self):
-    print("線上讀取股號、股名、及產業別")
+    # print("線上讀取股號、股名、及產業別")
     response = requests.get('https://isin.twse.com.tw/isin/C_public.jsp?strMode=2')
     url_data = BeautifulSoup(response.text, 'html.parser')
     stock_company = url_data.find_all('tr')
