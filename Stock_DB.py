@@ -92,7 +92,7 @@ class StockDB:
   #       若有同名欄位, 則要寫成 "資料表.欄位")
   # 參數 psdate (parse_date) 表示是否將日期欄的資料轉為日期型別,預設為 True
   # 傳回 DataFrame
-  def get(self, table, select=None, where=None, psdate=True): #參數：資料表, 欄位, 條件式, 解析日期欄
+  def get(self, table, select=None, where=None, psdate=False): #參數：資料表, 欄位, 條件式, 解析日期欄
     # 查詢資料
     if not isinstance(table, str): #如果不是字串, 就將元素以逗號組合
       table = ", ".join(table)
@@ -107,7 +107,26 @@ class StockDB:
     if where:
       sql += f" WHERE {where}"
     if psdate: # 要解析日期欄位, 將之轉為日期型別
-      df = pd.read_sql(sql, self.conn, parse_dates=['日期'])
+      if table == '日頻':
+        df = pd.read_sql(sql, self.conn, parse_dates=['日期'])
+      elif table == '季頻':
+        sql = '''
+        SELECT 股號, 
+            營業收入, 
+            營業費用, 
+            稅後淨利, 
+            每股盈餘,
+            strftime('%Y-%m-%d', 年份 || '-' || 
+            CASE 
+                WHEN 季度 = 'Q1' THEN '03' 
+                WHEN 季度 = 'Q2' THEN '06'
+                WHEN 季度 = 'Q3' THEN '09'
+                WHEN 季度 = 'Q4' THEN '12'
+            END || '-01') as 日期
+        FROM 季頻'''
+        df = pd.read_sql(sql, self.conn, parse_dates=['日期']) 
+        column_order = ['股號', '日期', '營業收入', '營業費用', '稅後淨利', '每股盈餘']
+        df = df[column_order]
     else:
       df = pd.read_sql(sql, self.conn)
     return df
