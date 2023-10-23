@@ -18,15 +18,15 @@ class PdfLoader:
         
         self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k")
         self.data_prompt=ChatPromptTemplate.from_messages(messages=[
-            ("system","你現在是一位專業的證券分析師,"
-            "你會詳細、嚴謹的統整年報並進行分析, 針對{output}作分析, 提及重要的數字, 然後生成一份專業的趨勢分析報告,tokens的上限為1600。"),
+            ("system","你現在是一位專業的年報分析師,"
+            "你會詳細、嚴謹的統整年報並進行分析, 並提及重要的數字, 然後生成一份專業的年報分析報告,tokens的上限為1600。"),
             ("human","{text}")])
         self.data_chain = LLMChain(llm=self.llm, prompt=self.data_prompt)
-        self.word_prompt=ChatPromptTemplate.from_messages(messages=[
-            ("system","你可以將使用者輸入的句子取出一個關鍵字,"
-            "要取出的關鍵字會是以年報中的會出現的相關名詞為主"),
-            ("human","{input}")])
-        self.word_chain = LLMChain(llm=self.llm, prompt=self.word_prompt)
+        # self.word_prompt=ChatPromptTemplate.from_messages(messages=[
+        #     ("system","你可以將使用者輸入的句子取出一個關鍵字,"
+        #     "要取出的關鍵字會是以年報中的會出現的相關名詞為主"),
+        #     ("human","{input}")])
+        # self.word_chain = LLMChain(llm=self.llm, prompt=self.word_prompt)
     def annual_report(self,id,y):
         wait_time = random.uniform(2,6)
         url = 'https://doc.twse.com.tw/server-java/t57sb01'
@@ -106,6 +106,6 @@ class PdfLoader:
         return db
     def analyze_chain(self,db,input):
         data = db.max_marginal_relevance_search(input)
-        word = self.word_chain.run(input)
-        result = self.data_chain({'output':word,'text':data})
+        # word = self.word_chain.run(input)
+        result = self.data_chain(data)
         return result['text']
