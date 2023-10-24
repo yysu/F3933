@@ -197,12 +197,5 @@ class StockAnalysis():
       }]
   
       reply_data = self.get_reply(msg)
-      today_time = dt.date.today().strftime("%Y%m%d")
-      path = '/content/drive/MyDrive/StockGPT/TrendReport/'
-      os.makedirs(path, exist_ok=True)
-      if os.path.exists(f"{path}trend_{stock_id}_{today_time}.txt"):
-        return f"{stock_id}檔案已存在"
-      else:
-        with open(f"{path}trend_{stock_id}_{today_time}.txt", "w", encoding="utf-8") as f:
-          f.write(reply_data)
+      
       return reply_data
