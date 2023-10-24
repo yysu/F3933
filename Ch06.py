@@ -4,6 +4,7 @@ import tiktoken
 import yfinance as yf
 import numpy as np
 import requests
+import os
 import datetime as dt
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -196,5 +197,8 @@ class StockAnalysis():
       }]
   
       reply_data = self.get_reply(msg)
-  
+      path = '/content/drive/MyDrive/StockGPT/stock_analysis_report/'
+      os.makedirs(path, exist_ok=True)
+      with open(path + {stock_id} + ".txt", "w", encoding="utf-8") as f:
+        f.write(reply_data)
       return reply_data
