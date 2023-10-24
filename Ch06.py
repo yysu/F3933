@@ -197,8 +197,9 @@ class StockAnalysis():
       }]
   
       reply_data = self.get_reply(msg)
-      path = '/content/drive/MyDrive/StockGPT/stock_analysis_report/'
+      today_time = dt.date.today().strftime("%Y%m%d")
+      path = '/content/drive/MyDrive/StockGPT/TrendReport/'
       os.makedirs(path, exist_ok=True)
-      with open(f"{path}{stock_id}.txt", "w", encoding="utf-8") as f:
+      with open(f"{path}trend_{stock_id}_{today_time}.txt", "w", encoding="utf-8") as f:
         f.write(reply_data)
       return reply_data
