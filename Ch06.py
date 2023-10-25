@@ -136,76 +136,89 @@ class StockAnalysis():
   
   # 設定 AI 角色, 使其依據使用者需求進行 df 處理
   def ai_helper(self, df_company, df_daily, df_quarterly, user_msg):
-    code_example ='''
-      def calculate(df_company, df_daily, df_quarterly):
-        
-        # 0. 從 df_quarterly 中計算每支股票的營業收入
-        grouped_revenue = df_quarterly.groupby('股號')['營業收入'].sum().reset_index()
-        df_company_with_revenue = pd.merge(df_company, grouped_revenue, on='股號', how='left')
-        
-        # 1. 將營業收入與 df_company 合併，然後選出半導體業中營業收入最高的20檔股票
-        semiconductor_stocks = df_company_with_revenue[df_company_with_revenue['產業別'] == '半導體業'].sort_values(by='營業收入', ascending=False).head(20)
+
+      code_example ='''
+  def calculate(df_company, df_daily, df_quarterly):
   
-        # 2. 根據選出的股票，從 df_daily 中選出近兩週的資料
-        two_weeks_ago = pd.to_datetime(df_daily['日期'].max()) - pd.DateOffset(weeks=2)
-        today_time = pd.to_datetime(df_daily['日期'].max())
-        recent_data = df_daily[(df_daily['股號'].isin(semiconductor_stocks['股號'])) & (df_daily['日期'] >= two_weeks_ago) & (df_daily['日期'] <= today_time)].copy()
+    # 從 df_quarterly 中計算每支股票的營業收入
+    grouped_revenue = df_quarterly.groupby('股號')['營業收入'].sum().reset_index()
   
-        # 3. 計算每支股票的三大法人買賣超股數
-        grouped_net_buy = recent_data.groupby('股號')['三大法人買賣超股數'].sum()
+    # 將營業收入與 df_company 合併，然後選出半導體業中營業收入最高的10檔股票
+    df_company_with_revenue = pd.merge(df_company, grouped_revenue, on='股號', how='left')
+    semiconductor_stocks = df_company_with_revenue[df_company_with_revenue['產業別'] == '半導體業'].sort_values(by='營業收入', ascending=False).head(10)
   
-        # 4. 將三大法人買賣超股數與 semiconductor_stocks 合併
-        result_df = pd.merge(semiconductor_stocks, grouped_net_buy, on='股號', how='left')
+    return semiconductor_stocks
+      '''
   
-        # 5. 找出三大法人買賣超股數最高的前5檔股票
-        top_10_stocks = result_df.sort_values(by='三大法人買賣超股數', ascending=False).head(5)
+      user_requirement = [{
+          "role": "user",
+          "content": f"The user requirement:{user_msg}\n\
+          df_company.columns ={df_company.columns}\n\
+          df_daily.columns ={df_daily.columns}\n\
+          df_quarterly.columns ={df_quarterly.columns}\n\
+          Your task is to develop a Python function named \
+          'calculate(df_company, df_daily, df_quarterly)' and return a new dataframe based on df_company."
+      }]
   
-        return top_10_stocks
-          '''
-  
-    msg = [
-      {
-        "role": "system",
+      msg = [{
+        "role":
+        "system",
         "content":
-        "我會提供三個表格的欄位, 請使用我給的欄位作為 DataFrame 的欄位,請勿自己生成欄位, 我給的欄位都有資料。"\
-        f"df_company表格為公司基本資料,數據為一對一,欄位為{df_company.columns}；"\
-        f"df_daily表格為每日股價表,數據為一對多時間為每日,欄位為{df_daily.columns}；"\
-        f"df_quarterly表格為季度損益表包含每股盈餘,數據為一對多時間為每季,欄位為{df_quarterly.columns}。"\
-        f"需要你判斷問題{user_msg}來解答問題。"\
-        "我只需要一個名為 'calculate(df_company, df_daily, df_quarterly)' 的 Python 函式來解答問題,, 請注意問題中的時間線和關鍵字,"\
-        "如果需要可以使用 DataFrame 的'isin'進行篩選"\
-        "如果需要可以使用 DataFrame 的'groupby'和'pct_change' 函數。"\
-        "必須過濾 NaN。不需要問題以外的步驟, 也不需要測試程式。"\
-        "最後函式返回的資料必須是以df_company表格為基礎的新 DataFrame, 請確保在函式最後將其轉換為 DataFrame。"\
-        "Please note that your response should solely consist of the code itself, and no additional information should be included. Do not test the program."
-      },
-      {
-      "role":
-      "user",
-      "content":"請選出半導體業營收最高的20檔股票中, 近兩周三大法人買賣超最高的5檔股票 "
-      }, 
-       
-      {
-      "role":
-      "assistant",
-      "content":f"{code_example}"
-      }, 
-      {
+        f"You will act as a professional Python code generation robot. \
+          Based on user requirements, you will manipulate the company data\
+          in the df table and perform stock selection. I will provide \
+          you with 3 df tables: df_compaany, df_daily, and df_quarterly. \n\
+          Please note that your response should solely \
+          consist of the code itself, \
+          and no additional information should be included."
+      }, {
         "role":
         "user",
         "content":
-        f"真正的問題要求: {user_msg}"\
-        "請只使用 pandas 進行計算。"\
-        "絕對不要使用 nlargest()。\n"
-        "# 計算每支股票的報酬率\n"
-        "recent_data.loc[:, '報酬率'] = recent_data.groupby('股號')['收盤價'].pct_change()\n"
-        "# 計算平均報酬率\n"
-        "grouped_returns = recent_data.groupby('股號')['報酬率'].mean().reset_index()\n"
-        "Please note that your response should solely consist of the code itself, and no additional information should be included. Do not test the program."
+        f"The user requirement:請選出半導體業且近期營收最高的股票 \n\
+          Your task is to develop a Python function named \
+          'calculate(df_company, df_daily, df_quarterly)'. Ensure that you only utilize the columns \
+          present in the dataset, \n\
+          The df_company table contains basic company information with columns:{df_company.columns}\n\
+          The df_daily table is a daily stock price table with columns:{df_daily.columns}\n\
+          The df_quarterly table is a quarterly revenue table with columns:{df_quarterly.columns}\n\
+          After processing, the function should return a new DataFrame based on df_company."
+      }, {
+        "role":
+        "assistant",
+        "content":f"{code_example}"
+      }]
+      msg += user_requirement
+  
+  
+      reply_data = self.get_reply(msg)
+      return user_requirement, reply_data
+
+  def ai_debug(self, history, code_str ,error_msg):
+      msg = [history]
+      msg += [{
+          "role": "system",
+          "content":
+          f"You will act as a professional Python code generation robot. \
+          I will send you the incorrect code and error message.\
+          Please correct and return the fixed code. \n\
+          Please note that your response should solely \
+          consist of the code itself, \
+          and no additional information should be included."
+      }, {
+          "role": "user",
+          "content": f"The error code:{code_str} \n\
+          The error message:{error_msg} \n\
+          Please reconfirm user requirements \n\
+          Your task is to develop a Python function named \
+          'calculate(df_company, df_daily, df_quarterly)', \
+          Please note that your response should solely \
+          consist of the code itself, \
+          and no additional information should be included."
       }]
   
-    reply_data = self.get_reply(msg)
-    return reply_data
+      reply_data = self.get_reply(msg)
+      return reply_data
   
   # 建立訊息指令(Prompt)
   def generate_content_msg(self, stock_id, name_df):
