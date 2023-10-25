@@ -204,7 +204,7 @@ class StockAnalysis():
         "Please note that your response should solely consist of the code itself, and no additional information should be included. Do not test the program."
       }]
   
-    reply_data = get_reply(msg)
+    reply_data = self.get_reply(msg)
     return reply_data
   
   # 建立訊息指令(Prompt)
