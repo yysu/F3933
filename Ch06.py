@@ -182,13 +182,13 @@ class StockAnalysis():
       {
       "role":
       "user",
-      "content":"範例問題要求:請選出營收最高的20檔股票中近兩周三大法人買賣超最高的5檔股票 "
+      "content":"請選出半導體業營收最高的20檔股票中, 近兩周三大法人買賣超最高的5檔股票 "
       }, 
        
       {
       "role":
       "assistant",
-      "content":{code_example}
+      "content":f"{code_example}"
       }, 
       {
         "role":
