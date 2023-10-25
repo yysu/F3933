@@ -207,7 +207,8 @@ class StockAnalysis():
           and no additional information should be included."
       }, {
           "role": "user",
-          "content": f"The error code:{code_str} \n\
+          "content": 
+          f"The error code:{code_str} \n\
           The error message:{error_msg} \n\
           Please reconfirm user requirements \n\
           Your task is to develop a Python function named \
