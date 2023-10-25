@@ -188,7 +188,7 @@ class StockAnalysis():
       {
       "role":
       "assistant",
-      "content":f"範例回答:{code_example}"
+      "content":{code_example}
       }, 
       {
         "role":
