@@ -136,7 +136,7 @@ class StockAnalysis():
   
   # 設定 AI 角色, 使其依據使用者需求進行 df 處理
   def ai_helper(self, df_company, df_daily, df_quarterly, user_msg):
-
+      
       code_example ='''
   def calculate(df_company, df_daily, df_quarterly):
   
