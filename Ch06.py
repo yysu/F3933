@@ -195,20 +195,22 @@ class StockAnalysis():
       return user_requirement, reply_data
 
   def ai_debug(self, history, code_str ,error_msg):
-      msg = [history]
-      msg += [{
+      msg = [{
           "role": "system",
           "content":
-          f"You will act as a professional Python code generation robot. \
+          "You will act as a professional Python code generation robot. \
           I will send you the incorrect code and error message.\
           Please correct and return the fixed code. \n\
           Please note that your response should solely \
           consist of the code itself, \
-          and no additional information should be included."
+          and no additional information should be included."}]
+      msg += history
+      msg += [{
+          "role": "system",
+          "content":f"{code_str}"
       }, {
           "role": "user",
-          "content": 
-          f"The error code:{code_str} \n\
+          "content": f"The error code:{code_str} \n\
           The error message:{error_msg} \n\
           Please reconfirm user requirements \n\
           Your task is to develop a Python function named \
@@ -218,8 +220,10 @@ class StockAnalysis():
           and no additional information should be included."
       }]
   
+  
       reply_data = self.get_reply(msg)
       return reply_data
+
   
   # 建立訊息指令(Prompt)
   def generate_content_msg(self, stock_id, name_df):
