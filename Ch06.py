@@ -10,23 +10,23 @@ from bs4 import BeautifulSoup
 import pandas as pd
 class StockInfo():
   # 取得全部股票的股號、股名
-  # def stock_name(self):
-  #   # print("線上讀取股號、股名、及產業別")
-  #   response = requests.get('https://isin.twse.com.tw/isin/C_public.jsp?strMode=2')
-  #   url_data = BeautifulSoup(response.text, 'html.parser')
-  #   stock_company = url_data.find_all('tr')
+  def stock_name(self):
+    # print("線上讀取股號、股名、及產業別")
+    response = requests.get('https://isin.twse.com.tw/isin/C_public.jsp?strMode=2')
+    url_data = BeautifulSoup(response.text, 'html.parser')
+    stock_company = url_data.find_all('tr')
   
-  #   # 資料處理
-  #   data = [
-  #       (row.find_all('td')[0].text.split('\u3000')[0].strip(),
-  #         row.find_all('td')[0].text.split('\u3000')[1],
-  #         row.find_all('td')[4].text.strip())
-  #       for row in stock_company[2:] if len(row.find_all('td')[0].text.split('\u3000')[0].strip()) == 4
-  #   ]
+    # 資料處理
+    data = [
+        (row.find_all('td')[0].text.split('\u3000')[0].strip(),
+          row.find_all('td')[0].text.split('\u3000')[1],
+          row.find_all('td')[4].text.strip())
+        for row in stock_company[2:] if len(row.find_all('td')[0].text.split('\u3000')[0].strip()) == 4
+    ]
   
-  #   df = pd.DataFrame(data, columns=['股號', '股名', '產業別'])
+    df = pd.DataFrame(data, columns=['股號', '股名', '產業別'])
   
-  #   return df
+    return df
   # 取得股票名稱
   def get_stock_name(self, stock_id, name_df):
       return name_df.set_index('股號').loc[stock_id, '股名']
@@ -37,7 +37,7 @@ class StockAnalysis():
     openai.api_key = openai_api_key
     # self.openai_api_key = getpass.getpass("請輸入金鑰：")  # 請在使用時設定 API 金鑰
     # self.stock_info = StockInfo()  # 實例化 StockInfo 類別
-    # self.name_df = self.stock_info.stock_name()
+    self.name_df = self.stock_info.stock_name()
   # 從 yfinance 取得一周股價資料
   def stock_price(self, stock_id="大盤", days = 15):
     if stock_id == "大盤":
