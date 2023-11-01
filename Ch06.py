@@ -140,19 +140,22 @@ class StockAnalysis():
       code_example ='''
   def calculate(df_company, df_daily, df_quarterly):
     
-    # 找出最近一週的日期
-    latest_week_date = df_daily['日期'].max() - pd.DateOffset(weeks=1)
+     # 將每股盈餘轉換為數值型態
+    df_quarterly['每股盈餘'] = pd.to_numeric(df_quarterly['每股盈餘'], errors='coerce')
     
-    # 選出最近一週的資料
-    recent_week_data = df_daily[df_daily['日期'] >= latest_week_date]
+    # 找出最近兩個季度的日期
+    latest_two_dates = df_quarterly['日期'].drop_duplicates().sort_values(ascending=False).head(2)
     
-    # 計算每支股票的收盤價漲幅
-    recent_week_data['漲幅'] = recent_week_data.groupby('股號')['收盤價'].pct_change()
+    # 選出最近兩季的資料
+    recent_two_quarters_data = df_quarterly[df_quarterly['日期'].isin(latest_two_dates)].copy()
+    
+    # 計算每支股票的每股盈餘成長率
+    recent_two_quarters_data['成長率'] = recent_two_quarters_data.groupby('股號')['每股盈餘'].pct_change()
     
     # 將 recent_week_data['漲幅'] 與 df_company 合併，然後選出半導體業中漲幅最高的10檔股票
-    df_company_with_growth_rate = pd.merge(df_company, recent_week_data[['股號', '漲幅']], on='股號', how='left')
+    df_company_with_growth_rate = pd.merge(df_company, recent_two_quarters_data[['股號', '成長率']], on='股號', how='left')
     
-    semiconductor_stocks = df_company_with_growth_rate[df_company_with_growth_rate['產業別'] == '半導體業'].sort_values(by='漲幅', ascending=False).head(10)
+    semiconductor_stocks = df_company_with_growth_rate[df_company_with_growth_rate['產業別'] == '半導體業'].sort_values(by='成長率', ascending=False).head(10)
   
     return semiconductor_stocks
       '''
