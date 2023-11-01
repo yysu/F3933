@@ -141,7 +141,7 @@ class StockAnalysis():
   def calculate(df_company, df_daily, df_quarterly):
     
      # 將每股盈餘轉換為數值型態
-    df_quarterly['每股盈餘'] = pd.to_numeric(df_quarterly['每股盈餘'], errors='coerce')
+    df_quarterly['營業收入'] = pd.to_numeric(df_quarterly['營業收入'], errors='coerce')
     
     # 找出最近兩個季度的日期
     latest_two_dates = df_quarterly['日期'].drop_duplicates().sort_values(ascending=False).head(2)
@@ -149,13 +149,13 @@ class StockAnalysis():
     # 選出最近兩季的資料
     recent_two_quarters_data = df_quarterly[df_quarterly['日期'].isin(latest_two_dates)].copy()
     
-    # 計算每支股票的每股盈餘成長率
-    recent_two_quarters_data['成長率'] = recent_two_quarters_data.groupby('股號')['每股盈餘'].pct_change()
+    # 計算每支股票的營業收入成長率
+    recent_two_quarters_data['營業收入成長率'] = recent_two_quarters_data.groupby('股號')['營業收入'].pct_change()
     
-    # 將 recent_week_data['漲幅'] 與 df_company 合併，然後選出半導體業中漲幅最高的10檔股票
-    df_company_with_growth_rate = pd.merge(df_company, recent_two_quarters_data[['股號', '成長率']], on='股號', how='left')
+    # 將 recent_two_quarters_data['營業收入成長率'] 與 df_company 合併，然後選出半導體業中營業收入成長最高的10檔股票
+    df_company_with_growth_rate = pd.merge(df_company, recent_two_quarters_data[['股號', '營業收入成長率']], on='股號', how='left')
     
-    semiconductor_stocks = df_company_with_growth_rate[df_company_with_growth_rate['產業別'] == '半導體業'].sort_values(by='成長率', ascending=False).head(10)
+    semiconductor_stocks = df_company_with_growth_rate[df_company_with_growth_rate['產業別'] == '半導體業'].sort_values(by='營業收入成長率', ascending=False).head(10)
   
     return semiconductor_stocks
       '''
@@ -185,7 +185,7 @@ class StockAnalysis():
         "role":
         "user",
         "content":
-        f"The user requirement:請選出半導體業且近一周漲幅最高的10檔股票 \n\
+        f"The user requirement:請選出半導體業中近期營收成長最高的10檔股票 \n\
           Your task is to develop a Python function named \
           'calculate(df_company, df_daily, df_quarterly)'. Ensure that you only utilize the columns \
           present in the dataset, \n\
