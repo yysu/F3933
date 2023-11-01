@@ -139,12 +139,18 @@ class StockAnalysis():
       
       code_example ='''
   def calculate(df_company, df_daily, df_quarterly):
+    
+    # 從 df_daily 中選取近一週的資料
+    end_date = df_quarterly['日期'].max()
+    start_date = end_date - pd.DateOffset(months=3)
+    df_weekly = df_quarterly[(df_quarterly['日期'] >= start_date) & (df_quarterly['日期'] <= end_date)]
   
     # 從 df_quarterly 中計算每支股票的營業收入
-    grouped_revenue = df_quarterly.groupby('股號')['營業收入'].sum().reset_index()
-  
+    grouped_revenue = df_weekly.groupby('股號')['營業收入'].sum().reset_index()
+    
     # 將營業收入與 df_company 合併，然後選出半導體業中營業收入最高的10檔股票
     df_company_with_revenue = pd.merge(df_company, grouped_revenue, on='股號', how='left')
+    
     semiconductor_stocks = df_company_with_revenue[df_company_with_revenue['產業別'] == '半導體業'].sort_values(by='營業收入', ascending=False).head(10)
   
     return semiconductor_stocks
