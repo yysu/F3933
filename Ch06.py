@@ -135,76 +135,51 @@ class StockAnalysis():
     return reply
   
   # 設定 AI 角色, 使其依據使用者需求進行 df 處理
-  def ai_helper(self, df_company, df_daily, df_quarterly, user_msg):
-      
-      code_example ='''
-  def calculate(df_company, df_daily, df_quarterly):
-    
-     # 將每股盈餘轉換為數值型態
-    df_quarterly['營業收入'] = pd.to_numeric(df_quarterly['營業收入'], errors='coerce')
-    
-    # 找出最近兩個季度的日期
-    latest_two_dates = df_quarterly['日期'].drop_duplicates().sort_values(ascending=False).head(2)
-    
-    # 選出最近兩季的資料
-    recent_two_quarters_data = df_quarterly[df_quarterly['日期'].isin(latest_two_dates)].copy()
-    
-    # 計算每支股票的營業收入成長率
-    recent_two_quarters_data['營業收入成長率'] = recent_two_quarters_data.groupby('股號')['營業收入'].pct_change()
-    
-    # 將 recent_two_quarters_data['營業收入成長率'] 與 df_company 合併，然後選出半導體業中營業收入成長最高的10檔股票
-    df_company_with_growth_rate = pd.merge(df_company, recent_two_quarters_data[['股號', '營業收入成長率']], on='股號', how='left')
-    
-    semiconductor_stocks = df_company_with_growth_rate[df_company_with_growth_rate['產業別'] == '半導體業'].sort_values(by='營業收入成長率', ascending=False).head(10)
-  
-    return semiconductor_stocks
-      '''
-  
-      user_requirement = [{
-          "role": "user",
-          "content": f"The user requirement:{user_msg}\n\
-          df_company.columns ={df_company.columns}\n\
-          df_daily.columns ={df_daily.columns}\n\
-          df_quarterly.columns ={df_quarterly.columns}\n\
-          Your task is to develop a Python function named \
-          'calculate(df_company, df_daily, df_quarterly)' and return a new dataframe based on df_company."
-      }]
-  
-      msg = [{
-        "role":
-        "system",
-        "content":
-        f"You will act as a professional Python code generation robot. \
-          Based on user requirements, you will manipulate the company data\
-          in the df table and perform stock selection. I will provide \
-          you with 3 df tables: df_compaany, df_daily, and df_quarterly. \n\
-          Please note that your response should solely \
-          consist of the code itself, \
-          and no additional information should be included."
-      }, {
-        "role":
-        "user",
-        "content":
-        f"The user requirement:請選出半導體業中近期營收成長最高的10檔股票 \n\
-          Your task is to develop a Python function named \
-          'calculate(df_company, df_daily, df_quarterly)'. Ensure that you only utilize the columns \
-          present in the dataset, \n\
-          The df_company table contains basic company information with columns:{df_company.columns}\n\
-          The df_daily table is a daily stock price table with columns:{df_daily.columns}\n\
-          The df_quarterly table is a quarterly revenue table with columns:{df_quarterly.columns}\n\
-          After processing, the function should return a new DataFrame based on df_company."
-      }, {
-        "role":
-        "assistant",
-        "content":f"{code_example}"
-      }]
-      msg += user_requirement
-  
-  
-      reply_data = self.get_reply(msg)
-      return user_requirement, reply_data
+def ai_helper(self,user_msg):
 
-  def ai_debug(self, history, code_str ,error_msg):
+    code_example ='''
+  def calculate(df_company, df_daily, df_quarterly):
+      df_quarterly['營業收入'] = pd.to_numeric(df_quarterly['營業收入'], errors='coerce')
+      latest_two_dates = df_quarterly['日期'].drop_duplicates().sort_values(ascending=False).head(2)
+      recent_two_quarters_data = df_quarterly[df_quarterly['日期'].isin(latest_two_dates)].copy()
+      recent_two_quarters_data['營業收入成長率'] = recent_two_quarters_data.groupby('股號')['營業收入'].pct_change()
+      df_company_with_growth_rate = pd.merge(df_company, recent_two_quarters_data[['股號', '營業收入成長率']], on='股號', how='left')
+      df_company_with_growth_rate['市值'] = pd.to_numeric(df_company_with_growth_rate['市值'], errors='coerce')
+      top_10_percent_market_cap = df_company_with_growth_rate.nlargest(int(len(df_company_with_growth_rate) * 0.1), '市值')
+      top_10_growth_stocks = top_10_percent_market_cap.sort_values(by='營業收入成長率', ascending=False).head(10)
+
+      return top_10_growth_stocks
+      '''
+
+    user_requirement = [{
+        "role": "user",
+        "content":
+        f"The user requirement: {user_msg}\n\
+        The df_company table contains basic company information with columns: ['股號', '股名', '產業別', '股本', '市值']\n\
+        The df_daily table is a daily stock price table with columns: ['股號', '日期', '開盤價', '最高價', '最低價', '收盤價', '還原價', '成交量', '殖利率', '日本益比', '股價淨值比', '三大法人買賣超股數', '融資買入', '融卷賣出']\n\
+        The df_quarterly table is a quarterly revenue table with columns: ['股號', '日期', '營業收入', '營業費用', '稅後淨利', '每股盈餘']\n\
+        Your task is to develop a Python function named 'calculate(df_company, df_daily, df_quarterly)' and return a new DataFrame table that includes a unique list of stocks.Please rely on df_company to consolidate the stock list and ensures that there are no NaN or Inf values."
+    }]
+
+    msg = [{
+        "role": "system",
+        "content": "As a stock selection strategy robot, your task is to generate Python code based on user requirements. The code should utilize three DataFrame tables for stock selection, namely df_company, df_daily, and df_quarterly. Please note that your response should solely consist of the code itself, and no additional information should be included. After processing, please return a new DataFrame table that includes a unique list of stocks and ensures that there are no NaN or Inf values."
+    }, {
+        "role": "user",
+        "content": "The user requirement:請選出大市值股(前10%)且近期營收成長最高的10檔股票"
+    }, {
+        "role": "assistant",
+        "content": f"{code_example}"
+    }]
+
+    msg += user_requirement
+
+
+    reply_data = self.get_reply(msg)
+    cleaned_code = reply_data.replace("python", "")
+    return user_requirement, cleaned_code
+
+def ai_debug(self, history, code_str ,error_msg):
       msg = [{
           "role": "system",
           "content":
@@ -229,10 +204,11 @@ class StockAnalysis():
           consist of the code itself, \
           and no additional information should be included."
       }]
-  
-  
+
+
       reply_data = self.get_reply(msg)
       return reply_data
+
 
   
   # 建立訊息指令(Prompt)
