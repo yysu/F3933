@@ -216,7 +216,7 @@ class StockAnalysis():
           and no additional information should be included."}]
       msg += history
       msg += [{
-          "role": "system",
+          "role": "assistant",
           "content":f"{code_str}"
       }, {
           "role": "user",
