@@ -146,13 +146,13 @@ class StockAnalysis():
     # 選出最近兩季的資料
     recent_two_quarters_data = df_quarterly[df_quarterly['日期'].isin(latest_two_dates)]
     
-    # 從 df_quarterly 中計算每支股票的營業收入
-    grouped_revenue = recent_two_quarters_data.groupby('股號')['營業收入'].sum().reset_index()
+    # 從 df_quarterly 中計算每支股票的平均營業收入
+    recent_two_quarters_data['營業收入成長率'] = recent_two_quarters_data.groupby('股號')['營業收入'].pct_change()
+    recent_two_quarters_data.dropna(subset=['營業收入成長率'], inplace=True)
+    # 將平均營業收入與 df_company 合併，然後選出半導體業中平均營業收入最高的10檔股票
+    df_company_with_growth_rate = pd.merge(df_company, recent_two_quarters_data[['股號', '營業收入成長率']], on='股號', how='left')
     
-    # 將營業收入與 df_company 合併，然後選出半導體業中營業收入最高的10檔股票
-    df_company_with_revenue = pd.merge(df_company, grouped_revenue, on='股號', how='left')
-    
-    semiconductor_stocks = df_company_with_revenue[df_company_with_revenue['產業別'] == '半導體業'].sort_values(by='營業收入', ascending=False).head(10)
+    semiconductor_stocks = df_company_with_growth_rate[df_company_with_growth_rate['產業別'] == '半導體業'].sort_values(by='營業收入成長率', ascending=False).head(10)
   
     return semiconductor_stocks
       '''
@@ -182,7 +182,7 @@ class StockAnalysis():
         "role":
         "user",
         "content":
-        f"The user requirement:請選出半導體業且近期營收最高的股票 \n\
+        f"The user requirement:請選出半導體業且近期平均營收最高的10檔股票 \n\
           Your task is to develop a Python function named \
           'calculate(df_company, df_daily, df_quarterly)'. Ensure that you only utilize the columns \
           present in the dataset, \n\
