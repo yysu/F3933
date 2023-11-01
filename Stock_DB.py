@@ -180,20 +180,23 @@ class StockDB:
       print('要更新的公司：', df)
 
     for id,name,industry in zip(df['股號'],df['股名'],df['產業別']):
-      stock = yf.Ticker(id+".TW")
-      if not 'sharesOutstanding' in stock.info:
-        stock_sharesOutstanding = None
-      else:
-        stock_sharesOutstanding=stock.info['sharesOutstanding']
-      if not 'marketCap' in stock.info:
-        stock_marketCap = None
-      else:
-        stock_marketCap=stock.info['marketCap']
-
-      self.conn.execute("INSERT INTO 公司 values(?,?,?,?,?)",
-                (id,name,industry,stock_sharesOutstanding,stock_marketCap))
-      self.conn.commit()
-      # print(id)
+      try:
+        stock = yf.Ticker(id+".TW")
+        if not 'sharesOutstanding' in stock.info:
+          stock_sharesOutstanding = None
+        else:
+          stock_sharesOutstanding=stock.info['sharesOutstanding']
+        if not 'marketCap' in stock.info:
+          stock_marketCap = None
+        else:
+          stock_marketCap=stock.info['marketCap']
+  
+        self.conn.execute("INSERT INTO 公司 values(?,?,?,?,?)",
+                  (id,name,industry,stock_sharesOutstanding,stock_marketCap))
+        self.conn.commit()
+        # print(id)
+      except:
+        pass
 
   def quarter_to_int(self, year, quarter):
     quarter_dict = {"Q1": 1, "Q2": 2, "Q3": 3, "Q4": 4}
