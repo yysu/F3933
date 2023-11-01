@@ -36,7 +36,7 @@ class StockAnalysis():
     # 初始化 OpenAI API 金鑰
     openai.api_key = openai_api_key
     # self.openai_api_key = getpass.getpass("請輸入金鑰：")  # 請在使用時設定 API 金鑰
-    # self.stock_info = StockInfo()  # 實例化 StockInfo 類別
+    self.stock_info = StockInfo()  # 實例化 StockInfo 類別
     self.name_df = self.stock_info.stock_name()
   # 從 yfinance 取得一周股價資料
   def stock_price(self, stock_id="大盤", days = 15):
