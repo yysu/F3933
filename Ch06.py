@@ -198,7 +198,6 @@ class StockAnalysis():
             "role": "user",
             "content": f"The error code:{code_str} \n\
             The error message:{error_msg} \n\
-            Before using nsmallest, ensure the column format is numeric. \n\
             Please reconfirm user requirements \n\
             Your task is to develop a Python function named \
             'calculate(table_company, table_daily, table_quarterly)', \
