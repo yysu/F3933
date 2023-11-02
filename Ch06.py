@@ -198,6 +198,7 @@ class StockAnalysis():
             "role": "user",
             "content": f"The error code:{code_str} \n\
             The error message:{error_msg} \n\
+            If the error message contains only column names, please rewrite the code to ensure the columns are in the correct tables.\n\
             Please reconfirm user requirements \n\
             Your task is to develop a Python function named \
             'calculate(table_company, table_daily, table_quarterly)', \
