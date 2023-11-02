@@ -186,6 +186,7 @@ class StockAnalysis():
             "You will act as a professional Python code generation robot. \
             I will send you the incorrect code and error message.\
             Please correct and return the fixed code. \n\
+            Only using Pandas. \
             Please note that your response should solely \
             consist of the code itself, \
             and no additional information should be included."}]
