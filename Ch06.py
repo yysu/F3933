@@ -158,7 +158,7 @@ class StockAnalysis():
           The table_company table contains basic company information with columns: ['股號', '股名', '產業別', '股本', '市值']\n\
           The table_daily table is a daily stock price table with columns: ['股號', '日期', '開盤價', '最高價', '最低價', '收盤價', '還原價', '成交量', '殖利率', '日本益比', '股價淨值比', '三大法人買賣超股數', '融資買入', '融卷賣出']\n\
           The table_quarterly table is a quarterly revenue table with columns: ['股號', '日期', '營業收入', '營業費用', '稅後淨利', '每股盈餘']\n\
-          Your task is to develop a Python function named 'calculate(table_company, table_daily, table_quarterly)'.Using the groupby() function in calculate() and return a new DataFrame table that includes a unique list of stocks.Please rely on table_company to consolidate the stock list and ensures that there are no NaN or Inf values."
+          Your task is to develop a Python function named 'calculate(table_company, table_daily, table_quarterly)'.Only using Pandas.Using the groupby() function in calculate() and return a new DataFrame table that includes a unique list of stocks.Please rely on table_company to consolidate the stock list and ensures that there are no NaN or Inf values."
       }]
   
       msg = [{
