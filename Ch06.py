@@ -138,12 +138,12 @@ class StockAnalysis():
   def ai_helper(self,user_msg):
   
       code_example ='''
-    def calculate(df_company, df_daily, df_quarterly):
-        df_quarterly['營業收入'] = pd.to_numeric(df_quarterly['營業收入'], errors='coerce')
-        latest_two_dates = df_quarterly['日期'].drop_duplicates().sort_values(ascending=False).head(2)
-        recent_two_quarters_data = df_quarterly[df_quarterly['日期'].isin(latest_two_dates)].copy()
+    def calculate(table_company, table_daily, table_quarterly):
+        table_quarterly['營業收入'] = pd.to_numeric(table_quarterly['營業收入'], errors='coerce')
+        latest_two_dates = table_quarterly['日期'].drop_duplicates().sort_values(ascending=False).head(2)
+        recent_two_quarters_data = table_quarterly[table_quarterly['日期'].isin(latest_two_dates)].copy()
         recent_two_quarters_data['營業收入成長率'] = recent_two_quarters_data.groupby('股號')['營業收入'].pct_change()
-        df_company_with_growth_rate = pd.merge(df_company, recent_two_quarters_data[['股號', '營業收入成長率']], on='股號', how='left')
+        df_company_with_growth_rate = pd.merge(table_company, recent_two_quarters_data[['股號', '營業收入成長率']], on='股號', how='left')
         df_company_with_growth_rate['市值'] = pd.to_numeric(df_company_with_growth_rate['市值'], errors='coerce')
         top_10_percent_market_cap = df_company_with_growth_rate.nlargest(int(len(df_company_with_growth_rate) * 0.1), '市值')
         top_10_growth_stocks = top_10_percent_market_cap.sort_values(by='營業收入成長率', ascending=False).head(10)
@@ -155,15 +155,15 @@ class StockAnalysis():
           "role": "user",
           "content":
           f"The user requirement: {user_msg}\n\
-          The df_company table contains basic company information with columns: ['股號', '股名', '產業別', '股本', '市值']\n\
-          The df_daily table is a daily stock price table with columns: ['股號', '日期', '開盤價', '最高價', '最低價', '收盤價', '還原價', '成交量', '殖利率', '日本益比', '股價淨值比', '三大法人買賣超股數', '融資買入', '融卷賣出']\n\
-          The df_quarterly table is a quarterly revenue table with columns: ['股號', '日期', '營業收入', '營業費用', '稅後淨利', '每股盈餘']\n\
-          Your task is to develop a Python function named 'calculate(df_company, df_daily, df_quarterly)'.Using the groupby() function in calculate() and return a new DataFrame table that includes a unique list of stocks.Please rely on df_company to consolidate the stock list and ensures that there are no NaN or Inf values."
+          The table_company table contains basic company information with columns: ['股號', '股名', '產業別', '股本', '市值']\n\
+          The table_daily table is a daily stock price table with columns: ['股號', '日期', '開盤價', '最高價', '最低價', '收盤價', '還原價', '成交量', '殖利率', '日本益比', '股價淨值比', '三大法人買賣超股數', '融資買入', '融卷賣出']\n\
+          The table_quarterly table is a quarterly revenue table with columns: ['股號', '日期', '營業收入', '營業費用', '稅後淨利', '每股盈餘']\n\
+          Your task is to develop a Python function named 'calculate(table_company, table_daily, table_quarterly)'.Using the groupby() function in calculate() and return a new DataFrame table that includes a unique list of stocks.Please rely on table_company to consolidate the stock list and ensures that there are no NaN or Inf values."
       }]
   
       msg = [{
           "role": "system",
-          "content": "As a stock selection strategy robot, your task is to generate Python code based on user requirements. The code should utilize three DataFrame tables for stock selection, namely df_company, df_daily, and df_quarterly. Please note that your response should solely consist of the code itself, and no additional information should be included. After processing, please return a new DataFrame table that includes a unique list of stocks and ensures that there are no NaN or Inf values."
+          "content": "As a stock selection strategy robot, your task is to generate Python code based on user requirements. The code should utilize three DataFrame tables for stock selection, namely table_company, table_daily, and table_quarterly. Please note that your response should solely consist of the code itself, and no additional information should be included. After processing, please return a new DataFrame table that includes a unique list of stocks and ensures that there are no NaN or Inf values."
       }, {
           "role": "user",
           "content": "The user requirement:請選出大市值股(前10%)且近期營收成長最高的10檔股票"
@@ -199,7 +199,7 @@ class StockAnalysis():
             The error message:{error_msg} \n\
             Please reconfirm user requirements \n\
             Your task is to develop a Python function named \
-            'calculate(df_company, df_daily, df_quarterly)', \
+            'calculate(table_company, table_daily, table_quarterly)', \
             Please note that your response should solely \
             consist of the code itself, \
             and no additional information should be included."
