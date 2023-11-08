@@ -125,7 +125,7 @@ class StockAnalysis():
   def get_reply(self, messages):
     try:
       response = openai.ChatCompletion.create(
-          model="gpt-3.5-turbo-16k",
+          model="gpt-3.5-turbo-1106",
           temperature=0,
           messages=messages
       )
