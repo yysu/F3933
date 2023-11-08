@@ -209,6 +209,7 @@ class StockAnalysis():
   
   
         reply_data = self.get_reply(msg)
+        cleaned_code = reply_data.replace("python", "")
         return reply_data
 
 
