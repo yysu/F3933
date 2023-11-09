@@ -176,7 +176,8 @@ class StockAnalysis():
   
   
       reply_data = self.get_reply(msg)
-      cleaned_code = reply_data.replace("python", "")
+      cleaned_code = reply_data.replace("```", "")
+      cleaned_code = cleaned_code.replace("python", "")
       return user_requirement, cleaned_code
   
   def ai_debug(self, history, code_str ,error_msg):
@@ -209,7 +210,8 @@ class StockAnalysis():
   
   
         reply_data = self.get_reply(msg)
-        cleaned_code = reply_data.replace("python", "")
+        cleaned_code = reply_data.replace("```", "")
+        cleaned_code = cleaned_code.replace("python", "")
         return cleaned_code 
 
 
