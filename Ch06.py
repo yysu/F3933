@@ -201,7 +201,7 @@ class StockAnalysis():
             Please reconfirm user requirements \n\
             Your task is to develop a Python function named \
             'calculate(table_company, table_daily, table_quarterly)', \
-            Please only using Pandas. \
+            Please only using the Pandas library. \
             Please note that your response should solely \
             consist of the code itself, \
             and no additional information should be included."
