@@ -137,8 +137,7 @@ class StockAnalysis():
     # 設定 AI 角色, 使其依據使用者需求進行 df 處理
   def ai_helper(self,user_msg):
   
-      code_example =
-    """
+      code_example ="""
     def calculate(table_company, table_daily, table_quarterly):
         table_quarterly['營業收入'] = pd.to_numeric(table_quarterly['營業收入'], errors='coerce')
         latest_two_dates = table_quarterly['日期'].drop_duplicates().sort_values(ascending=False).head(2)
