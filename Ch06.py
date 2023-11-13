@@ -1,5 +1,6 @@
 import getpass
 import openai
+from openai import OpenAI
 import tiktoken
 import yfinance as yf
 import numpy as np
@@ -34,8 +35,7 @@ class StockInfo():
 class StockAnalysis():
   def __init__(self,openai_api_key):
     # 初始化 OpenAI API 金鑰
-    openai.api_key = openai_api_key
-    # self.openai_api_key = getpass.getpass("請輸入金鑰：")  # 請在使用時設定 API 金鑰
+    self.client = OpenAI(api_key=openai_api_key)
     self.stock_info = StockInfo()  # 實例化 StockInfo 類別
     self.name_df = self.stock_info.stock_name()
   # 從 yfinance 取得一周股價資料
@@ -124,14 +124,14 @@ class StockAnalysis():
   # 建立 GPT 3.5-16k 模型
   def get_reply(self, messages):
     try:
-      response = openai.ChatCompletion.create(
-          model="gpt-3.5-turbo-1106",
+      response = self.client.chat.completions.create(
+          model="gpt-3.5-turbo",
           temperature=0,
           messages=messages
       )
-      reply = response["choices"][0]["message"]["content"]
+      reply = response.choices[0].message..content
     except openai.OpenAIError as err:
-      reply = f"發生 {err.error.type} 錯誤\n{err.error.message}"
+      reply = f"發生 {err.type} 錯誤\n{err.message}"
     return reply
   
     # 設定 AI 角色, 使其依據使用者需求進行 df 處理
