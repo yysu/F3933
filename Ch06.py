@@ -129,7 +129,7 @@ class StockAnalysis():
           temperature=0,
           messages=messages
       )
-      reply = response.choices[0].message..content
+      reply = response.choices[0].message.content
     except openai.OpenAIError as err:
       reply = f"發生 {err.type} 錯誤\n{err.message}"
     return reply
