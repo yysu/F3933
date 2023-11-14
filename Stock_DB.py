@@ -249,8 +249,8 @@ class StockDB:
           combined_df.insert(0, '股號', id)   # 加入股號欄
           combined_df.to_sql('季頻', self.conn, if_exists='append', index=False)
         else:
-          print("不用更新!")
-          return
+          pass
+    return print("更新完成")
 
   def url_find(self,url):
     words = url.split('/')
