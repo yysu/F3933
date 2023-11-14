@@ -357,7 +357,7 @@ class StockDB:
     else:
       input_date = datetime.strptime(m_date, '%Y-%m-%d') # 將字串轉換為日期型別
       next_day = input_date + timedelta(days=1) # 將日期加一天
-      if next_day > datetime.today(): #如果不用更新
+      if next_day => datetime.today(): #如果不用更新
         print("不用更新！")
         return
       start_date = next_day.strftime('%Y-%m-%d') # 格式化日期為 "2020-02-23" 格式的字串
