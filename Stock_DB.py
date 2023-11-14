@@ -63,7 +63,7 @@ class StockDB:
   # 更新股票資訊
   def renew(self):
     self.renew_company() # 公司的基本資訊
-    # self.renew_daily() # 更新日頻的基本資訊
+    self.renew_daily() # 更新日頻的基本資訊
     self.renew_quarterly_frequency_basic() # 更新季頻的基本資訊
 
 
