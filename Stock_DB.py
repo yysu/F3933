@@ -230,6 +230,7 @@ class StockDB:
         else:
           print("不用更新")
           return
+    df = self.stock_name()
     for id, name in zip(df['股號'],df['股名']):
         df_data=[]
         url = [f'https://tw.stock.yahoo.com/quote/{id}.TW/income-statement',
