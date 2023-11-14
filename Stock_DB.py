@@ -214,22 +214,6 @@ class StockDB:
     #更新季頻資料表
     print('更新季頻')
     
-    # df = self.stock_name()
-    # for id, name in zip(df['股號'],df['股名']):
-    #     df_data=[]
-    #     url = [f'https://tw.stock.yahoo.com/quote/{id}.TW/income-statement',
-    #             f'https://tw.stock.yahoo.com/quote/{id}.TW/eps']
-    #     df = self.url_find(url[0])
-    #     year, quarter = df.columns[1].split(' ')
-    #     data_time = self.quarter_to_int(year, quarter)
-    #     latest_data_time = self.quarter_to_int(latest_year, latest_quarter)
-    #     if data_time > latest_data_time:
-    #       self.conn.execute("DELETE FROM 季頻")
-    #       print("刪除")
-    #       break
-    #     else:
-    #       print("不用更新")
-    #       return
     df = self.stock_name()
     for id, name in zip(df['股號'],df['股名']):
         df_data=[]
@@ -240,34 +224,43 @@ class StockDB:
         data_time = self.quarter_to_int(year, quarter)
         latest_data_time = self.quarter_to_int(latest_year, latest_quarter)
         if data_time > latest_data_time:
-          print(id)
-          df = df.transpose()
-          df.columns = df.iloc[0]
-          df = df[1:]
-          df.insert(0,'年度/季別',df.index)
-          df.columns.name = None
-          df.reset_index(drop=True, inplace=True)
-          df_data.append(df)
-  
-          # 季EPS表
-          df=self.url_find(url[1])
-          df_data.append(df)
-  
-          # 將兩個 DataFrame 按列名合併
-          combined_df = df_data[0].merge(df_data[1], on='年度/季別')
-          # print 合併後的DataFrame
-          combined_df=combined_df.iloc[:,[0,1,3,5,6]]
-          combined_df[['年份', '季度']] = combined_df['年度/季別'].str.split(' ', expand=True)
-          combined_df.drop(columns=['年度/季別'], inplace=True)
-  
-          # 重新排列列的顺序
-          combined_df = combined_df[['年份', '季度', '營業收入', '營業費用', '稅後淨利', '每股盈餘']]
-          combined_df.insert(0, '股號', id)   # 加入股號欄
-          # combined_df.to_sql('季頻', self.conn, if_exists='append', index=False)
-          combined_df.to_sql('季頻', self.conn, if_exists='replace', index=False)
-    else:
+          self.conn.execute("DELETE FROM 季頻")
+          print("刪除")
+          break
+        else:
           print("不用更新")
-          return   
+          return
+    df = self.stock_name()
+    for id, name in zip(df['股號'],df['股名']):
+        df_data=[]
+        url = [f'https://tw.stock.yahoo.com/quote/{id}.TW/income-statement',
+                f'https://tw.stock.yahoo.com/quote/{id}.TW/eps']
+        df = self.url_find(url[0])
+        print(id)
+        df = df.transpose()
+        df.columns = df.iloc[0]
+        df = df[1:]
+        df.insert(0,'年度/季別',df.index)
+        df.columns.name = None
+        df.reset_index(drop=True, inplace=True)
+        df_data.append(df)
+
+        # 季EPS表
+        df=self.url_find(url[1])
+        df_data.append(df)
+
+        # 將兩個 DataFrame 按列名合併
+        combined_df = df_data[0].merge(df_data[1], on='年度/季別')
+        # print 合併後的DataFrame
+        combined_df=combined_df.iloc[:,[0,1,3,5,6]]
+        combined_df[['年份', '季度']] = combined_df['年度/季別'].str.split(' ', expand=True)
+        combined_df.drop(columns=['年度/季別'], inplace=True)
+
+        # 重新排列列的顺序
+        combined_df = combined_df[['年份', '季度', '營業收入', '營業費用', '稅後淨利', '每股盈餘']]
+        combined_df.insert(0, '股號', id)   # 加入股號欄
+        combined_df.to_sql('季頻', self.conn, if_exists='append', index=False)
+      
     return print("更新完成")
 
   def url_find(self,url):
