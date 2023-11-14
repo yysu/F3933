@@ -223,6 +223,7 @@ class StockDB:
         data_time = self.quarter_to_int(year, quarter)
         latest_data_time = self.quarter_to_int(latest_year, latest_quarter)
         if data_time > latest_data_time:
+          self.conn.execute("DELETE FROM 季頻")
           print(id)
           df = df.transpose()
           df.columns = df.iloc[0]
