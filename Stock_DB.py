@@ -225,6 +225,7 @@ class StockDB:
         latest_data_time = self.quarter_to_int(latest_year, latest_quarter)
         if data_time > latest_data_time:
           self.conn.execute("DELETE FROM 季頻")
+          print("刪除")
           break
         else:
           print("不用更新")
