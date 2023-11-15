@@ -123,7 +123,9 @@ class StockDB:
                 WHEN 季度 = 'Q3' THEN '09'
                 WHEN 季度 = 'Q4' THEN '12'
             END || '-01') as 日期
-        FROM 季頻'''
+            
+        FROM 季頻
+        ORDER BY 日期 DESC'''
         df = pd.read_sql(sql, self.conn, parse_dates=['日期']) 
         column_order = ['股號', '日期', '營業收入', '營業費用', '稅後淨利', '每股盈餘']
         df = df[column_order]
