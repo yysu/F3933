@@ -221,7 +221,7 @@ class StockDB:
     # 判斷當前日期是否在任一報告的啟動窗口內
     if q1_release - window <= today <= q1_release:
         report_type = True
-    elif q2_release - window <= today <= q2_releasew:
+    elif q2_release - window <= today <= q2_release:
         report_type = True
     elif q3_release - window <= today <= q3_release:
         report_type = True
