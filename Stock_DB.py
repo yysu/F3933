@@ -211,47 +211,65 @@ class StockDB:
     m_date = cursor.fetchone()
     latest_year, latest_quarter = m_date
     print('季頻基本資料的最後更新日：', m_date)  #for debug 
+    q1_release = datetime(today.year, 5, 15)
+    q2_release = datetime(today.year, 8, 14)
+    q3_release = datetime(today.year, 11, 14)
+    annual_report_release = datetime(today.year + 1, 3, 31)
+    window = timedelta(days=30)
+    # 判斷當前日期是否在任一報告的啟動窗口內
+    if q1_release - window <= today <= q1_release:
+        report_type = True
+    elif q2_release - window <= today <= q2_releasew:
+        report_type = True
+    elif q3_release - window <= today <= q3_release:
+        report_type = True
+    elif annual_report_release - window <= today <= annual_report_release:
+        report_type = True
+    else:
+        report_type = False
+    if report_type:
+      #更新季頻資料表
+      print('更新季頻')
+      
+      df = self.stock_name()
+      for id, name in zip(df['股號'],df['股名']):
+          df_data=[]
+          url = [f'https://tw.stock.yahoo.com/quote/{id}.TW/income-statement',
+                  f'https://tw.stock.yahoo.com/quote/{id}.TW/eps']
+          df = self.url_find(url[0])
+          year, quarter = df.columns[1].split(' ')
+          data_time = self.quarter_to_int(year, quarter)
+          latest_data_time = self.quarter_to_int(latest_year, latest_quarter)
+          if data_time > latest_data_time:
+            print(id)
+            df = df.transpose()
+            df.columns = df.iloc[0]
+            df = df[1:]
+            df.insert(0,'年度/季別',df.index)
+            df.columns.name = None
+            df.reset_index(drop=True, inplace=True)
+            df_data.append(df)
     
-    #更新季頻資料表
-    print('更新季頻')
+            # 季EPS表
+            df=self.url_find(url[1])
+            df_data.append(df)
     
-    df = self.stock_name()
-    for id, name in zip(df['股號'],df['股名']):
-        df_data=[]
-        url = [f'https://tw.stock.yahoo.com/quote/{id}.TW/income-statement',
-                f'https://tw.stock.yahoo.com/quote/{id}.TW/eps']
-        df = self.url_find(url[0])
-        year, quarter = df.columns[1].split(' ')
-        data_time = self.quarter_to_int(year, quarter)
-        latest_data_time = self.quarter_to_int(latest_year, latest_quarter)
-        if data_time > latest_data_time:
-          print(id)
-          df = df.transpose()
-          df.columns = df.iloc[0]
-          df = df[1:]
-          df.insert(0,'年度/季別',df.index)
-          df.columns.name = None
-          df.reset_index(drop=True, inplace=True)
-          df_data.append(df)
-  
-          # 季EPS表
-          df=self.url_find(url[1])
-          df_data.append(df)
-  
-          # 將兩個 DataFrame 按列名合併
-          combined_df = df_data[0].merge(df_data[1], on='年度/季別')
-          # print 合併後的DataFrame
-          combined_df=combined_df.iloc[:,[0,1,3,5,6]]
-          combined_df[['年份', '季度']] = combined_df['年度/季別'].str.split(' ', expand=True)
-          combined_df.drop(columns=['年度/季別'], inplace=True)
-  
-          # 重新排列列的顺序
-          combined_df = combined_df[['年份', '季度', '營業收入', '營業費用', '稅後淨利', '每股盈餘']]
-          combined_df.insert(0, '股號', id)   # 加入股號欄
-          combined_df.to_sql('季頻', self.conn, if_exists='append', index=False)
-        else:
-            pass
-    return print("更新完成")
+            # 將兩個 DataFrame 按列名合併
+            combined_df = df_data[0].merge(df_data[1], on='年度/季別')
+            # print 合併後的DataFrame
+            combined_df=combined_df.iloc[:,[0,1,3,5,6]]
+            combined_df[['年份', '季度']] = combined_df['年度/季別'].str.split(' ', expand=True)
+            combined_df.drop(columns=['年度/季別'], inplace=True)
+    
+            # 重新排列列的顺序
+            combined_df = combined_df[['年份', '季度', '營業收入', '營業費用', '稅後淨利', '每股盈餘']]
+            combined_df.insert(0, '股號', id)   # 加入股號欄
+            combined_df.to_sql('季頻', self.conn, if_exists='append', index=False)
+          else:
+              pass
+      return print("更新完成")
+    else:
+      return "不用更新"
 
   def url_find(self,url):
     words = url.split('/')
