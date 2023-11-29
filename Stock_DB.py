@@ -271,7 +271,7 @@ class StockDB:
               pass
       return print("更新完成")
     else:
-      return "不用更新"
+      return print("不用更新")
 
   def url_find(self,url):
     words = url.split('/')
