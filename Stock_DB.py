@@ -216,20 +216,20 @@ class StockDB:
     q2_release = datetime(today.year, 8, 14)
     q3_release = datetime(today.year, 11, 14)
     annual_report_release = datetime(today.year + 1, 3, 31)
-    window = timedelta(days=30)
+    if q1_release <= today < q2_release:
+        report_type = "Q1"
+    elif q2_release <= today < q3_release:
+        report_type = "Q2"
+    elif q3_release <= today <  annual_report_release:
+        report_type = "Q3"
+    elif  annual_report_release < today <= datetime(today.year + 1, 5, 15):
+        report_type = "Q4"
     
-    # 判斷當前日期是否在任一報告的啟動窗口內
-    if q1_release - window <= today <= q1_release:
-        report_type = True
-    elif q2_release - window <= today <= q2_release:
-        report_type = True
-    elif q3_release - window <= today <= q3_release:
-        report_type = True
-    elif annual_report_release - window <= today <= annual_report_release:
-        report_type = True
+    print(f"當前狀態: {report_type}")
+    
+    if report_type == latest_quarter:
+      return print("不用更新")
     else:
-        report_type = False
-    if report_type:
       #更新季頻資料表
       print('更新季頻')
       
@@ -270,8 +270,7 @@ class StockDB:
           else:
               pass
       return print("更新完成")
-    else:
-      return print("不用更新")
+   
 
   def url_find(self,url):
     words = url.split('/')
