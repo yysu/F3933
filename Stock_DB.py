@@ -210,12 +210,14 @@ class StockDB:
     cursor = self.conn.execute('SELECT 年份, 季度 FROM 季頻 ORDER BY 年份 DESC, 季度 DESC LIMIT 1')
     m_date = cursor.fetchone()
     latest_year, latest_quarter = m_date
-    print('季頻基本資料的最後更新日：', m_date)  #for debug 
+    print('季頻基本資料的最後更新日：', m_date)  #for debug
+    today = datetime.now()
     q1_release = datetime(today.year, 5, 15)
     q2_release = datetime(today.year, 8, 14)
     q3_release = datetime(today.year, 11, 14)
     annual_report_release = datetime(today.year + 1, 3, 31)
     window = timedelta(days=30)
+    
     # 判斷當前日期是否在任一報告的啟動窗口內
     if q1_release - window <= today <= q1_release:
         report_type = True
