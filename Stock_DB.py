@@ -216,6 +216,7 @@ class StockDB:
     q2_release = datetime(today.year, 8, 14)
     q3_release = datetime(today.year, 11, 14)
     annual_report_release = datetime(today.year + 1, 3, 31)
+    report_type = None
     if q1_release <= today < q2_release:
         report_type = "Q1"
     elif q2_release <= today < q3_release:
@@ -227,7 +228,7 @@ class StockDB:
     
     print(f"當前狀態: {report_type}")
     
-    if report_type == latest_quarter:
+    if report_type == latest_quarter or report_type is None:
       return print("不用更新")
     else:
       #更新季頻資料表
